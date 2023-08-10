@@ -1,0 +1,1028 @@
+/* @import url('https://fonts.googleapis.com/css?family=Droid+Serif:400,400italic|Montserrat:400,700'); */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+* {
+  box-sizing: border-box;
+}
+
+html{
+  font-size: 65%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+header {
+  background-color: #f2f2f2;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 2rem 9%;
+  box-shadow: 0 .5rem 1rem rgba(0, 0,0, 0.1);
+}
+
+/* Website body control */
+body {
+  font-family: 'Open Sans', sans-serif;
+  /* font-family: Arial, sans-serif; */
+  background: #f2f1f1;
+}
+
+/* Navbar design section */
+.navbar {
+  padding-left: 100px;
+  padding-left: 20px;
+}
+
+/* Navbar internal design */
+.navbar-nav .nav-item .nav-link {
+  font-weight: bold;
+  transition: color 0.3s ease;
+  font-size: 1.4rem;
+}
+
+/* Navbar hover control */
+.navbar-nav .nav-item .nav-link:hover {
+  color: #FFFEF0; 
+}
+
+.navbar-nav .nav-item.active .nav-link {
+  color: #FFFEF0;
+}
+
+/* Navbar unorder list */
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar list */
+nav ul li {
+  display: inline;
+  margin-right: 10px;
+}
+
+/* Navbar list linker */
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Homepage banner image */
+.banner-image {
+  height: 93.5vh !important;
+  object-fit: cover;
+}
+
+/* Header section */
+.header {
+  text-align: center;
+  font-weight: bold;
+  margin: 10px 0px;
+  padding: 5px 2px;
+}
+
+/* Header under small section */
+.small-header {
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+/* Layout design */
+.attractive-layout {
+  justify-content: center;
+  align-items: center;
+  background-color: #F2F2F2;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+/* Text decoration */
+.attractive-text-center {
+  font-size: 1.4rem;
+  color: #333333;
+  text-align: center;
+  padding:1rem 0;
+  line-height: 1.5;
+}
+/* Text decoration */
+.attractive-text-justify {
+  font-size: 14px;
+  color: #333333;
+  text-align: justify;
+  padding:1rem 0;
+  line-height: 1.5;
+}
+
+/* Whole container of body */
+.content {
+  margin-top: 50px;
+  background-color: #f2f1f1;
+}
+
+/* Section layout */
+section {
+  margin: 20px;
+  padding: 2rem 9%;
+}
+
+/* Label decoration */
+.label-text {
+  font-size: 14px;
+  color: #333333;
+  text-align: justify;
+}
+
+/* Address text decoration */
+.address {
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+/* Column alignment */
+.column {
+  flex: 1;
+  margin: 0 10px;
+}
+
+/* Container control decoration */
+.container-flex {
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Homepage layout theme */
+.carousel-caption {
+  text-align: center;
+}
+
+/* Homepage form theme */
+.carousel-caption .form-control {
+  margin: 0 auto;
+  width: 300px;
+  text-align: center;
+}
+
+/* Carousel view header */
+.carousel-caption .header {
+  color: #ffffff ;
+  text-shadow: 2px 2px 4px #000;
+  font-weight: 700;
+}
+
+/* Carousel view text */
+.carousel-caption p {
+  color: #ffffff ;
+  text-shadow: 2px 2px 4px #000;
+  font-weight: 600;
+}
+
+/* Speciality section decoration */
+.speciality-section .box-container{
+  display: flex;
+  flex-wrap: wrap;
+  gap:1.5rem;
+}
+
+/* Speciality section box decoration */
+.speciality-section .box-container .box{
+  flex:1 1 40rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+  border:.1rem solid rgba(0,0,0,.3);
+  cursor: pointer;
+  border-radius: .5rem;
+}
+
+/* Speciality section image */
+.speciality-section .box-container .box .image{
+  height:100%;
+  width:100%;
+  object-fit: cover;
+  position: absolute;
+  top:-100%;
+  left:0;
+}
+
+/* Speciality Items */
+.speciality-section .box-container .box .item{
+  text-align: center;
+  background:#fff;
+  padding:2rem;
+  top: 0;
+}
+
+/* Speciality box hover */
+.speciality-section .box-container .box:hover .image{
+  transform: translateY(100%);
+  transition: 0.5s ease;
+}
+
+/* Feature section decoration */
+.features-section .feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+  
+/* Feature section lists */
+.features-section .feature i {
+  margin-bottom: 10px;
+}
+
+/* Button Layout for whole content */
+.btn, 
+.btn-primary, 
+input[type="submit"],
+.signup-form input[type="submit"],
+.social-login .google-btn,
+.social-login .apple-btn,
+.social-login .facebook-btn {
+  background-color: #f8f9fa !important;
+  border: 1px solid #f8f9fa !important;
+  border-radius: 4px !important;
+  color: #3c4043 !important;
+  cursor: pointer !important;
+  font-family: arial,sans-serif;
+  font-size: 14px !important;
+  height: 36px !important;
+  line-height: 27px !important;
+  min-width: 54px !important;
+  padding: 0 auto !important;
+  text-align: center !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  touch-action: manipulation !important;
+}
+
+/* Button hover for whole content */
+.btn:hover, .btn-primary:hover,
+input[type="submit"]:hover,
+.signup-form input[type="submit"]:hover,
+.social-login .google-btn:hover,
+.social-login .apple-btn:hover,
+.social-login .facebook-btn:hover {
+  background-color: #4793FF !important;
+  color: #f8f9fa !important;
+  border-color: #dadce0;
+  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+  color: #202124;
+}
+
+/* Button focus for whole content */
+.btn:focus, .btn-primary:focus,
+input[type="submit"]:focus,
+.signup-form input[type="submit"]:focus,
+.social-login .google-btn:focus,
+.social-login .apple-btn:focus,
+.social-login .facebook-btn:focus {
+  border-color: #4285f4;
+  outline: none;
+}
+
+/* Button width set */
+.btn, 
+.btn-primary {
+  display: block;
+  margin: 0 auto;
+  width: 120px !important;
+}
+
+/* Add to bag separate control */
+.add-to-bag {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  bottom: 0;
+  right: 0;
+  margin: 0% 10%;
+}
+
+/* Social login buttons controller */
+/* .social-login .google-btn,
+.social-login .apple-btn,
+.social-login .facebook-btn {
+  width: 200px;
+  height: 7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+} */
+
+/* Social login buttons controller */
+.social-btn {
+  width: 200px !important;
+}
+
+/* Remove button control */
+.btn-remove {
+  padding: 5px;
+  color: #4793FF;
+}
+
+/* Remove icon font */
+.btn-remove::before {
+  font-family: "Font Awesome 5 Free";
+  content: "\f2ed";
+}
+
+/* Login form layout */
+.login-form {
+  width: 50%;
+}
+
+/* Login form decoration */
+.login-form label,
+.login-form input,
+.login-form span,
+.login-form button {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+/* Forget password decoration */
+span.forget-password {
+  text-align: center;
+  padding-top: 16px;
+}
+
+/* Form container */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Social login layout control */
+.social-login {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* .social-login img {
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.social-login a {
+  height: 100px;
+  width: 250px;
+  vertical-align: middle;
+  margin-right: 10px;
+} */
+
+/* Signup form container */
+.signup-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  display: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+/* Signup form */
+.signup-form {
+  width: 40%;
+  max-width: 80%;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+ /* Signup form control */
+.signup-form label {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: bold;
+}
+
+/* Signup form button */
+.signup-form .btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Input text decoration */
+input[type="text"],
+input[type="password"],
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Submit form input control */
+.signup-form input[type="text"],
+.signup-form input[type="password"],
+.signup-form input[type="tel"],
+.signup-form input[type="email"],
+.signup-form textarea {
+  width: 100%;
+  padding: 2px;
+  margin: 1px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+/* Signup text area */
+.signup-form textarea {
+  resize: vertical;
+}
+
+/* Signup link decoration */
+.signup-link {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Signup anchor decoration */
+.signup-link a {
+  color: #4285f4;
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+/* Menu page controld */
+.menu-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.product-detail .header {
+  text-align: justify;
+}
+
+/* Filter section decoration */
+.filters,
+.price-range {
+  flex: 0 0 48%;
+}
+
+/* Filter price range */
+.price-range input[type="range"] {
+  width: 100px;
+}
+
+/* Card decoration */
+.card {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Image inside card decoration */
+.card-img-top {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* Card body decoration */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Card Title */
+.card-title {
+  text-align: center;
+  margin: 0px;
+}
+
+/* Card image */
+.cardimage img{
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+}
+
+
+.product-detail {
+  padding: 2%;
+}
+
+.form-check-label {
+  font-weight: normal;
+}
+
+#priceRange {
+  width: 100%;
+}
+
+/* Menu filter price range */
+#priceRangeValue {
+  font-weight: bold;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.product-imgs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Image contol division */
+.img-display{
+  position: relative;
+  overflow: hidden;
+}
+
+.img-display img {
+  width: 100%;
+  height: 400px;
+}
+
+/* Product container decoration */
+.product-content{
+  padding: 2rem 1rem;
+}
+
+/* Menu decoration */
+.menu-options h3 {
+  margin-top: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.menu-options ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.menu-options li {
+    margin-bottom: 5px;
+}
+
+.menu-options a {
+    color: #555;
+    text-decoration: none;
+}
+
+.menu-options a:hover {
+    color: #000;
+}
+
+/* Menu filter controller */
+.menu-controls h3,
+.price-range h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Pagination position styling */
+.pagination {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* Pagination styling */
+.pagination a {
+  display: inline-block;
+  color: #000;
+  padding: 10px 18px;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
+  flex: 1;
+  text-align: center;
+}
+
+/* Pagination hover effect on non-active */
+.pagination a:hover:not(.active) {
+  background-color: #256eff;
+  color: #fff;
+  border-color: #256eff;
+}
+
+/* Pagination active */
+.pagination .active a {
+  background-color: #031f3b;
+  color: #fff;
+  border-color: #031f3b;
+  font-weight: bold;
+}
+
+/* Pagination disabled */
+.pagination .disabled a {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Pagination previous and next */
+.pagination li:first-child a,
+.pagination li:last-child a {
+  padding: 10px 18px;
+}
+
+/* Pagination previous and next hover effect */
+.pagination li:first-child a:hover,
+.pagination li:last-child a:hover {
+  background-color: #256eff;
+  color: #fff;
+  border-color: #256eff;
+}
+
+/* Pagination previous and next disabled */
+.pagination li.disabled a {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Map position style */
+#map {
+  height: 400px;
+  width: 100%;
+  margin-top: 1%;
+  margin-bottom: 2%;
+  padding-bottom: 5%;
+  position: relative;
+}
+
+/* Map button control */
+#map .mapboxgl-ctrl-bottom-right {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+/* Product detail title header */
+.title-header{
+  font-size: 2rem;
+  text-transform: capitalize;
+  font-weight: 700;
+  position: relative;
+  color: #12263a;
+  margin: 1rem 0;
+}
+
+/* product star decoration */
+.product-rating{
+  color: #ffc107;
+}
+
+/* product rating decoration */
+.product-rating span{
+  font-weight: 600;
+  color: #252525;
+}
+
+/* product detail price decoration */
+.product-price{
+  margin: 1rem 0;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.product-price span{
+  font-weight: 400;
+}
+
+.last-price span{
+  color: #f64749;
+  text-decoration: line-through;
+}
+
+.new-price span{
+  color: #256eff;
+}
+
+/* cart items decoration */
+.cart-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+/* cart item image decoration */
+.item-image img{
+  height: 100px;
+  width: 100px;
+  flex: 0 0 80px;
+  margin-right: 10px;
+}
+
+/* Item detail container */
+.item-details {
+  flex: 1 1 auto;
+}
+
+/* Item detail header */
+.item-details h3 {
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.price {
+  color: #000;
+  margin-bottom: 5px;
+}
+
+.item-quantity {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.item-quantity input {
+  width: 50px;
+  padding: 3px;
+  text-align: center;
+}
+
+.item-quantity button {
+  background-color: #f8f9fa;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 5px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.item-quantity button:hover {
+  background-color: #e9ecef;
+}
+
+/* Remove item from cart */
+.item-remove {
+  flex: 0 0 50px;
+}
+
+/* Cart subtotal display */
+.cart-total {
+  margin-bottom: 5px;
+  text-align: end;
+}
+
+/* checkout layout panel decoration */
+.checkout-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 50px auto;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* payment method decoration */
+.payment-method {
+  display: flex;
+  margin: 20px auto;
+  justify-content: space-between;
+}
+
+.method {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Card logos styling */
+.card-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+}
+
+/* Images inside card logos styling */
+.card-logos img{
+  height: 50px;
+  width: 100%;
+  object-fit: contain;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.radio-input {
+  margin-left: 10px;
+}
+
+/* Checkout inputs decoration */
+.input-fields {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.column-1,
+.column-2 {
+  width: 100%;
+}
+
+.small-inputs {
+  display: flex;
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.small-inputs div {
+  width: 45%;
+}
+
+.info {
+  font-size: 12px;
+  font-weight: 300;
+  display: block;
+  margin-top: 50px;
+  opacity: 0.5;
+  color: #2e2e2e;
+}
+
+/* Checkout panel media query */
+@media (max-width: 600px) {
+  .checkout-panel {
+    margin: 30px auto;
+  }
+
+  .payment-method {
+    flex-direction: row;
+  }
+
+  .method {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+
+  .input-fields {
+    flex-direction: column;
+  }
+
+  .small-inputs div {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+.warning {
+  border-color: #1abc9c;
+} 
+
+/* footer decoration */
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+.footer h4 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.footer p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+/* Footer contact style */
+.contact-info {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-info li {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.contact-info i {
+  margin-right: 10px;
+}
+
+/* Footer follow us logos */
+.social-media {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.social-media li {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1.5rem;
+}
+
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+/* Footer image decoration */
+.footer img {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.footer-links li {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.footer-links a {
+  color: #ebebeb;
+  text-decoration: none;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Footer last line styling */
+.bottom-bar p {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* footer icon decorations */
+.fa {
+  font-size: inherit;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  transition: color 0.3s;
+  border-radius: 50%;
+}
+
+.fa-facebook:hover {
+  color: #3b5998;
+}
+
+.fa-twitter:hover {
+  color: #1da1f2;
+}
+
+.fa-instagram:hover {
+  color: #c32aa3;
+}
+
+.fa-linkedin:hover {
+  color: #0e76a8;
+}
