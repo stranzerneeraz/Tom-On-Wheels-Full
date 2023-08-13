@@ -1,3 +1,5 @@
+console.log("script.js loaded");
+
 // Load Menu page when clicking from speciality section in homepage
 function menuPage() {
     window.location.href = "menu.html";
@@ -13,6 +15,31 @@ function showSignup() {
 function hideSignup() {
     var signupContainer = document.getElementById("signupContainer");
     signupContainer.style.display = "none";
+}
+
+
+// Function to update the navbar based on user login status
+function updateNavbar(isLoggedIn) {
+    var navLinks = document.querySelectorAll(".nav-link");
+    console.log("navbar updated");
+
+    if (isLoggedIn) {
+        navLinks.forEach(function(link) {
+            if (link.getAttribute("href") === "login.php") {
+                link.textContent = "Logout";
+                link.setAttribute("onclick", "confirmLogout()");
+                console.log("logout navbar js");
+            }
+        });
+    } else {
+        navLinks.forEach(function(link) {
+            if (link.getAttribute("href") === "login.php") {
+                link.textContent = "Login";
+                link.removeAttribute("onclick");
+                console.log("login navbar js");
+            }
+        });
+    }
 }
 
 function confirmLogout() {

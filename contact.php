@@ -1,3 +1,35 @@
+<?php
+session_start();
+require_once "config.php";
+
+// Check if the user is logged in
+$isLoggedIn = isset($_SESSION["user_id"]);
+
+if ($isLoggedIn) {
+    $userId = $_SESSION["user_id"];
+}
+
+// Form submission handling
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = $_POST["email"];
+    $subject = $_POST["subject"];
+    $description = $_POST["description"];
+
+    if ($isLoggedIn) {
+        // User is logged in, insert the data along with user_id
+        $query = "INSERT INTO contact_us (email, user_id, subject, description) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("siss", $email, $userId, $subject, $description);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        // User is not logged in, show an alert and redirect to login page
+        echo "<script>alert('Please login before submitting your message.'); window.location.href='login.php';</script>";
+        exit;
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -14,13 +46,59 @@
       href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css"
       rel="stylesheet"
     />
-    <link
+    <!-- <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+    /> -->
   </head>
   <body>
-    <?php include 'navbar.php'; ?>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-bottom-dark fixed-top" data-bs-theme="dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.php">
+                    <img src="images/logo.jpeg" alt="Logo" width="40" height="32" class="d-inline-block align-text-top">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="menu.php">Menu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="orders.php">Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.php">Contact Us</a>
+                        </li>
+                        <?php
+                            if (isset($_SESSION["user_id"])) {
+                                echo "<script>";
+                                echo "console.log('Logged in navbar')";
+                                echo "</script>";
+                                echo '<li class="nav-item">
+                                        <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                                    </li>';
+                            } else {
+                                echo "<script>";
+                                echo "console.log('Logged out navbar')";
+                                echo "</script>";
+                                echo '<li class="nav-item">
+                                        <a class="nav-link" href="login.php">Login</a>
+                                    </li>';
+                            }
+                            ?>
+                    </ul>
+                    <form class="d-flex ms-auto" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-primary" type="submit">Search</button>
+                    </form>
+                </div>
+            </div> 
+        </nav>
 
     <div class="content">
       <div class="container">

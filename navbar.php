@@ -1,3 +1,18 @@
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+
+
+    <?php
+    // session_start();
+// Debugging: Output session information
+echo "<script>";
+echo "console.log('Session ID: " . session_id() ."')";
+echo "Session ID: " . session_id() . "<br>";
+echo "user_id: " . (isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : "Not set");
+echo "</script>";
+?>
+
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,8 +23,11 @@
     <!-- Css, bootstrap and fonts imports -->
     <link rel="stylesheet" type="text/css" href="css/style.css" /> 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+      // Inline JavaScript to set the initial user login status and call the updateNavbar function
+      var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? "true" : "false"; ?>;
+      updateNavbar(isLoggedIn);
+    </script>
   </head>
 
   <body>
@@ -38,17 +56,39 @@
                   <a class="nav-link" href="contact.php">Contact Us</a>
                 </li>
                 <?php
-                  session_start();
                   if (isset($_SESSION["user_id"])) {
-                    echo '<li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
-                          </li>';
+                    echo "<script>";
+              echo "console.log('Logged out navbar')";
+              echo "</script>";
+                      echo '<li class="nav-item">
+                              <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                            </li>';
                   } else {
-                    echo '<li class="nav-item">
-                            <a class="nav-link" href="login.php">Login</a>
-                          </li>';
+                    echo "<script>";
+              echo "console.log('Logged in')";
+              echo "</script>";
+                      echo '<li class="nav-item">
+                              <a class="nav-link" href="login.php">Login</a>
+                            </li>';
                   }
                 ?>
+                <!-- <?php
+                  if (isset($_SESSION["user_id"])) {
+                    echo "<script>";
+              echo "console.log('Logged out navbar')";
+              echo "</script>";
+                      echo '<li class="nav-item">
+                              <a class="nav-link" href="logout.php">Logout</a>
+                            </li>';
+                  } else {
+                    echo "<script>";
+              echo "console.log('Logged in')";
+              echo "</script>";
+                      echo '<li class="nav-item">
+                              <a class="nav-link" href="login.php">Login</a>
+                            </li>';
+                  }
+                ?> -->
               </ul>
               <form class="d-flex ms-auto" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -57,5 +97,8 @@
             </div>
           </div> 
     </nav>
+
+    <script src="js/script.js"></script>
+    
   </body>
 </html>
