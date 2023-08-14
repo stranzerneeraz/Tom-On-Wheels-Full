@@ -33,7 +33,6 @@ function addToCart($item)
 }
 ?>
 
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -98,7 +97,7 @@ function addToCart($item)
     <div class="content">
       <div class="container">
         <!-- Cart Items -->
-<div class="cart-items">
+        <div class="cart-items">
     <?php
     if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
         foreach ($_SESSION['cart'] as $item) {
@@ -107,9 +106,9 @@ function addToCart($item)
             echo '<img src="' . $item['image_url'] . '" alt="' . $item['name'] . '" />';
             echo '</div>';
             echo '<div class="item-quantity">';
-            echo '<button class="minus-btn">-</button>';
-            echo '<input type="number" value="' . $item['quantity'] . '" min="1" />';
-            echo '<button class="plus-btn">+</button>';
+            echo '<button class="minus-btn" onclick="decreaseQuantity(' . $item['id'] . ')">-</button>';
+            echo '<input id="quantity-' . $item['id'] . '" type="number" value="' . $item['quantity'] . '" min="1" />';
+            echo '<button class="plus-btn" onclick="increaseQuantity(' . $item['id'] . ')">+</button>';
             echo '</div>';
             echo '<div class="item-details">';
             echo '<h3 class="header">' . $item['name'] . '</h3>';
@@ -205,8 +204,26 @@ function addToCart($item)
     <!-- Footer Section -->
     <?php include 'footer.php'; ?>
 
-    <script src="js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+    <script src="js/script.js"></script>
+    <script>
+    // Function to increase the quantity of an item in the cart
+    function increaseQuantity(itemId) {
+        const inputElement = document.querySelector(`#quantity-${itemId}`);
+        const quantity = parseInt(inputElement.value);
+        inputElement.value = quantity + 1;
+    }
+
+    // Function to decrease the quantity of an item in the cart
+    function decreaseQuantity(itemId) {
+        const inputElement = document.querySelector(`#quantity-${itemId}`);
+        const quantity = parseInt(inputElement.value);
+        if (quantity > 1) {
+            inputElement.value = quantity - 1;
+        }
+    }
+</script>
+    
   </body>
 </html>

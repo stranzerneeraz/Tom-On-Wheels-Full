@@ -5,36 +5,55 @@
 
 <!-- PHP Code to Fetch Item Details -->
 <?php
-      session_start();
-      include 'config.php';
+session_start();
+include 'config.php';
 
-      error_reporting(E_ALL);
-      ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-      try {
-        if (!isset($_GET['item_id'])) {
-          throw new Exception("Invalid item ID.");
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION["user_id"]);
+
+try {
+    if (!isset($_GET['item_id'])) {
+        throw new Exception("Invalid item ID.");
+    }
+    $item_id = $_GET['item_id'];
+
+    // Fetch the item details from the database based on the item_id
+    $query = "SELECT * FROM menu_items WHERE item_id = $item_id";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        throw new Exception("Error fetching item details: " . mysqli_error($conn));
+    }
+
+    $item = mysqli_fetch_assoc($result);
+
+    if (isset($_POST['add_to_bag'])) {
+        if ($isLoggedIn) {
+            $quantity = isset($_POST['quantity']) ? intval($_POST['quantity']) : 1;
+            $user_id = $_SESSION["user_id"];
+            $name = mysqli_real_escape_string($conn, $item['name']);
+            $image_url = mysqli_real_escape_string($conn, $item['image_url']);
+    
+            $insertQuery = "INSERT INTO order_bag (user_id, item_id, name, image_url, quantity) 
+                            VALUES ('$user_id', '$item_id', '$name', '$image_url', '$quantity')";
+            
+            if (mysqli_query($conn, $insertQuery)) {
+                echo "Item added to bag successfully!";
+            } else {
+                echo "Error adding item to bag: " . mysqli_error($conn);
+            }
+        } else {
+            echo "You must be logged in to add items to the bag.";
         }
-        echo "<script>";
-        echo "console.log('item id received');";
-        echo "</script>";
-        $item_id = $_GET['item_id'];
-
-        // Fetch the item details from the database based on the item_id
-        $query = "SELECT * FROM menu_items WHERE item_id = $item_id";
-        $result = mysqli_query($conn, $query);
-
-        if (!$result) {
-          throw new Exception("Error fetching item details: " . mysqli_error($connection));
-        }
-
-        $item = mysqli_fetch_assoc($result);
-      } catch (Exception $e) {
-        echo "An error occurred: " . $e->getMessage();
-        // You can also log the error for debugging purposes
-      }
+    }
+} catch (Exception $e) {
+    echo "An error occurred: " . $e->getMessage();
+    // You can also log the error for debugging purposes
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -126,63 +145,90 @@
                           <h2 class="header">About This Item:</h2>
                           <p class="attractive-text-justify"><?php echo $item['description']; ?></p>
                       </div>
-                      <div class="item-quantity">
-                          <button class="minus-btn">-</button>
-                          <input type="number" value="1" min="1" />
-                          <button class="plus-btn">+</button>
-                      </div>
-                      <button type="button" class="btn btn-primary">
-                          Add to Bag <i class="fas fa-shopping-cart"></i>
-                      </button>
+                      <form method="post">
+    <input type="hidden" name="item_id" value="<?php echo $item_id; ?>">
+    <div class="item-quantity">
+        <button class="minus-btn">-</button>
+        <input type="number" name="quantity" value="1" min="1" />
+        <button class="plus-btn">+</button>
+    </div>
+    <?php if ($isLoggedIn) { ?>
+        <button type="submit" class="btn btn-primary" name="add_to_bag">
+            Add to Bag <i class="fas fa-shopping-cart"></i>
+        </button>
+    <?php } else { ?>
+        <p class="text-danger">You must be logged in to add items to the bag.</p>
+    <?php } ?>
+</form>
                   </div>
               </div>
           </div>
       </div>
         
       <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-12">
-                <!-- Popular Items -->
-                <h2 class="header">Popular Items</h2>
-                <div class="row">
+    <div class="row">
+        <div class="col-lg-12 col-12">
+            <!-- Popular Items -->
+            <h2 class="header">Popular Items</h2>
+            <div class="row">
+    <?php
+    // Fetch four random items from the database
+    $randomItemsQuery = "SELECT * FROM menu_items ORDER BY RAND() LIMIT 4";
+    $randomItemsResult = mysqli_query($conn, $randomItemsQuery);
 
-                    <?php
-                    // Fetch four random items from the database
-                    $randomItemsQuery = "SELECT * FROM menu_items ORDER BY RAND() LIMIT 4";
-                    $randomItemsResult = mysqli_query($conn, $randomItemsQuery);
-
-                    if ($randomItemsResult) {
-                        while ($randomItem = mysqli_fetch_assoc($randomItemsResult)) {
-                            echo '<div class="col-md-3 col-12">';
-                            echo '<div class="card m-3 border">';
-                            echo '<div class="card-body">';
-                            echo '<div class="cardimage">';
-                            echo '<a href="menu-detail.php?item_id=' . $randomItem['item_id'] . '" style="object-fit: cover;">';
-                            echo '<img src="' . $randomItem['image_url'] . '" class="" alt="...">';
-                            echo '</a>';
-                            echo '<h5 class="card-title header">' . $randomItem['name'] . '</h5>';
-                            echo '<h6 class="card-title header">£' . $randomItem['price'] . '</h6>';
-                            echo '<button class="btn btn-primary add-to-bag">Add to Bag <i class="fas fa-shopping-cart"></i></button>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                        }
-                    } else {
-                        echo '<p>No popular items available.</p>';
-                    }
-                    ?>
-                </div>
-            </div>
+    if ($randomItemsResult) {
+        while ($randomItem = mysqli_fetch_assoc($randomItemsResult)) {
+            $randomItem_id = $randomItem['item_id']; // Renamed variable
+            echo '<div class="col-md-3 col-12">';
+            echo '<div class="card m-3 border">';
+            echo '<div class="card-body">';
+            echo '<div class="cardimage">';
+            echo '<a href="menu-detail.php?item_id=' . $randomItem_id . '" style="object-fit: cover;">';
+            echo '<img src="' . $randomItem['image_url'] . '" class="" alt="...">';
+            echo '</a>';
+            echo '<h5 class="card-title header">' . $randomItem['name'] . '</h5>';
+            echo '<h6 class="card-title header">£' . $randomItem['price'] . '</h6>';
+            
+            // Check if the user is logged in
+            if ($isLoggedIn) {
+                echo '<form method="post">';
+                echo '<input type="hidden" name="item_id" value="' . $randomItem_id . '">';
+                echo '<input type="hidden" name="name" value="' . $randomItem['name'] . '">';
+                echo '<input type="hidden" name="price" value="' . $randomItem['price'] . '">';
+                echo '<input type="hidden" name="image_url" value="' . $randomItem['image_url'] . '">';
+                echo '<div class="item-quantity">';
+                echo '<button class="minus-btn">-</button>';
+                echo '<input type="number" name="quantity" value="1" min="1" />';
+                echo '<button class="plus-btn">+</button>';
+                echo '</div>';
+                echo '<button type="submit" class="btn btn-primary add-to-bag" name="add_to_bag">Add to Bag <i class="fas fa-shopping-cart"></i></button>';
+                echo '</form>';
+            } else {
+                echo '<p class="text-danger">You must be logged in to add items to the bag.</p>';
+            }
+            
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+        }
+    } else {
+        echo '<p>No popular items available.</p>';
+    }
+    ?>
+</div>
         </div>
-      </div>
+    </div>
+</div>
+
+
     </div>
             
     <!-- Footer container -->
     <?php include 'footer.php'; ?>
 
-    <script src="js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
