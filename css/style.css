@@ -497,7 +497,7 @@ input[type="submit"] {
   margin-bottom: 20px;
 }
 
-.product-detail .header {
+.menu-detail .header {
   text-align: justify;
 }
 
@@ -546,7 +546,7 @@ input[type="submit"] {
 }
 
 
-.product-detail {
+.menu-detail {
   padding: 2%;
 }
 

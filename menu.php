@@ -12,21 +12,30 @@ if (!isset($_SESSION["user_id"])) {
 
 // Add item to bag
 if (isset($_POST["add_to_bag"])) {
-    $item_id = $_POST["item_id"];
-    $user_id = $_SESSION["user_id"];
-    
-    $item_query = "SELECT * FROM menu_items WHERE item_id = $item_id";
-    $item_result = $conn->query($item_query);
-    
-    if ($item_result->num_rows > 0) {
-        $item_data = $item_result->fetch_assoc();
-        $name = $item_data["name"];
-        $image_url = $item_data["image_url"];
-        
-        // Insert item into order_bag
-        $insert_query = "INSERT INTO order_bag (item_id, user_id, name, image_url, quantity) VALUES ($item_id, $user_id, '$name', '$image_url', 1)";
-        $conn->query($insert_query);
-    }
+  $item_id = $_POST["item_id"];
+  $user_id = $_SESSION["user_id"];
+  
+  $item_query = "SELECT * FROM menu_items WHERE item_id = $item_id";
+  $item_result = $conn->query($item_query);
+  
+  if ($item_result->num_rows > 0) {
+      $item_data = $item_result->fetch_assoc();
+      $name = $item_data["name"];
+      $image_url = $item_data["image_url"];
+      
+      // Insert item into order_bag
+      $insert_query = "INSERT INTO order_bag (item_id, user_id, name, image_url, quantity) VALUES ($item_id, $user_id, '$name', '$image_url', 1)";
+      if ($conn->query($insert_query)) {
+          $response = array("success" => true, "message" => "Item added to bag.");
+      } else {
+          $response = array("success" => false, "message" => "Error adding item to bag.");
+      }
+      
+      // Send JSON response
+      header("Content-Type: application/json");
+      echo json_encode($response);
+      exit(); // Terminate script execution
+  }
 }
 ?>
 
@@ -38,6 +47,7 @@ if (isset($_POST["add_to_bag"])) {
 
         <link rel="stylesheet" type="text/css" href="css/style.css" /> 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
     </head>
 
     <body>
@@ -134,40 +144,35 @@ if (isset($_POST["add_to_bag"])) {
                 </div>
             </div>
             <div class="col-lg-10 col-12">
-              <div class="row">
-              <?php
-$sql = "SELECT * FROM menu_items";
-$result = $conn->query($sql);
+    <div class="row">
+        <?php
+        $sql = "SELECT * FROM menu_items";
+        $result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo '<div class="col-md-4 col-12">';
-        echo '<div class="card m-3 border">';
-        echo '<a href="menu-detail.php?item_id=' . $row["item_id"] . '">';
-        echo '<img src="' . $row["image_url"] . '" class="card-img-top" alt="...">';
-        echo '</a>';
-        echo '<div class="card-body">';
-        echo '<h5 class="card-title header">' . $row["name"] . '</h5>';
-        echo '<h6 class="card-title header">£' . $row["price"] . '</h6>';
-        
-        // Add to Bag button with form submission
-        echo '<form method="post">';
-        echo '<input type="hidden" name="item_id" value="' . $row["item_id"] . '">';
-        echo '<button class="btn btn-primary add-to-bag" type="submit" name="add_to_bag">';
-        echo 'Add to Bag <i class="fas fa-shopping-cart"></i>';
-        echo '</button>';
-        echo '</form>';
-        
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-    }
-} else {
-    echo "0 results";
-}
-?>
-              </div>
-          </div>
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<div class="col-md-4 col-12">';
+                echo '<div class="card m-3 border">';
+                echo '<a href="menu-detail.php?item_id=' . $row["item_id"] . '">';
+                echo '<img src="' . $row["image_url"] . '" class="card-img-top" alt="...">';
+                echo '</a>';
+                echo '<div class="card-body">';
+                echo '<h5 class="card-title header">' . $row["name"] . '</h5>';
+                echo '<h6 class="card-title header">£' . $row["price"] . '</h6>';
+                
+                // Add to Bag button with AJAX functionality
+                echo '<button class="btn btn-primary add-to-bag" data-item-id="' . $row["item_id"] . '">Add to Bag <i class="fas fa-shopping-cart"></i></button>';
+                
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+            }
+        } else {
+            echo "0 results";
+        }
+        ?>
+    </div>
+</div>
           </div>
         </div>
         <ul class="pagination">
@@ -182,14 +187,38 @@ if ($result->num_rows > 0) {
       
     <?php include 'footer.php'; ?>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/2L8Cm+6ayY4U1b0yIbbVYUew+OrCXaRkfjWjTu" crossorigin="anonymous"></script>
+    
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
 <script src="js/script.js"></script>
 <script>
-    var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? "true" : "false"; ?>;
-    updateNavbar(isLoggedIn);
-</script>
+        var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? "true" : "false"; ?>;
+        updateNavbar(isLoggedIn);
+
+        $(document).ready(function () {
+    $(".add-to-bag").on("click", function () {
+        var itemId = $(this).data("item-id");
+        
+        $.ajax({
+            url: "menu.php",
+            method: "POST",
+            data: { add_to_bag: true, item_id: itemId }, // Include add_to_bag flag
+            dataType: "json",
+            success: function (response) {
+                console.log(response); // For debugging
+                if (response.success) {
+                    // Item added successfully, update UI if needed
+                } else {
+                    // Error adding item, handle accordingly
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error); // For debugging
+            }
+        });
+    });
+});
+    </script>
   </body>
 </html>
  

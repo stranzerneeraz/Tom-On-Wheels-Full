@@ -171,23 +171,20 @@ function isValidMobile(mobile) {
     return /^\d{10}$/.test(mobile);
 }
 
-function addToBag(itemId) {
-    // Create the item object with relevant details
-    const item = {
-        id: itemId,
-        // Add other relevant item properties here
-    };
-
-    // Send an AJAX POST request to add the item to the bag
-    fetch('orders.php', {
-        method: 'POST',
-        body: JSON.stringify(item),
-    })
-    .then(response => response.text())
-    .then(message => {
-        console.log(message); // Display the response message (e.g., "Item added to cart.")
-    })
-    .catch(error => {
-        console.error('Error adding item to bag:', error);
-    });
-}
+// function addToBag(formData) {
+//     fetch("menu-detail.php", {
+//         method: "POST",
+//         body: formData,
+//     })
+//     .then(response => response.json()) // Use response.json() instead of response.text()
+//     .then(data => {
+//         if (data.success) {
+//             console.log(data.success);
+//         } else if (data.error) {
+//             console.error(data.error);
+//         }
+//     })
+//     .catch(error => {
+//         console.error("Error adding item to bag:", error);
+//     });
+// }
