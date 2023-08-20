@@ -52,21 +52,19 @@ if ($isLoggedIn) {
                         </li>
                         <?php
                             if (isset($_SESSION["user_id"])) {
-                                echo "<script>";
-                                echo "console.log('Logged in navbar')";
-                                echo "</script>";
-                                echo '<li class="nav-item">
-                                        <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                              echo '<li class="nav-item">
+                                      <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                                    </li>';
+
+                              echo '<li class="nav-item">
+                                      <a class="nav-link" href="profile.php"> Hi, ' . $_SESSION['name'] . '</a>
                                     </li>';
                             } else {
-                                echo "<script>";
-                                echo "console.log('Logged out navbar')";
-                                echo "</script>";
-                                echo '<li class="nav-item">
-                                        <a class="nav-link" href="login.php">Login</a>
+                              echo '<li class="nav-item">
+                                      <a class="nav-link" href="login.php">Login</a>
                                     </li>';
                             }
-                            ?>
+                          ?>
                     </ul>
                     <form class="d-flex ms-auto" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

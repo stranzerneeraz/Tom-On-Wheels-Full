@@ -63,15 +63,19 @@
                         </li>
                         <?php
                             if (isset($_SESSION["user_id"])) {
-                                echo '<li class="nav-item">
-                                        <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                              echo '<li class="nav-item">
+                                      <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                                    </li>';
+
+                              echo '<li class="nav-item">
+                                      <a class="nav-link" href="profile.php"> Hi, ' . $_SESSION['name'] . '</a>
                                     </li>';
                             } else {
-                                echo '<li class="nav-item">
-                                        <a class="nav-link" href="login.php">Login</a>
+                              echo '<li class="nav-item">
+                                      <a class="nav-link" href="login.php">Login</a>
                                     </li>';
                             }
-                            ?>
+                        ?>
                     </ul>
                     <form class="d-flex ms-auto" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -92,7 +96,7 @@
                             </div>
                         </div>
                         <div class="product-content">
-                            <h2 class="title-header"><?php echo $item['name']; ?></h2>
+                            <h1 class="title-header"><?php echo $item['name']; ?></h2>
                             <div class = "product-rating">
                                 <i class = "fas fa-star"></i>
                                 <i class = "fas fa-star"></i>
@@ -116,7 +120,7 @@
                             <div class="item-quantity">
                                 <!-- Quantity input code as before -->
                             </div>
-                            <button id="add-to-bag-button" class="btn btn-primary" data-item-id="<?php echo $item_id; ?>">
+                            <button id="add-to-bag-button" class="btn btn-primary" data-item-id="<?php echo $item_id; ?>" data-item-price="<?php echo $item['deal_price']; ?>">
                                 Add to Bag <i class="fas fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -140,7 +144,9 @@
                                                 </a>
                                                 <h5 class="card-title header"><?php echo $popular_item['name']; ?></h5>
                                                 <h6 class="card-title header">£<?php echo $popular_item['price']; ?></h6>
-                                                <button class="btn btn-primary add-to-bag add-to-bag-popular" data-item-id="<?php echo $popular_item['item_id']; ?>">
+                                                <button class="btn btn-primary add-to-bag add-to-bag-popular"
+                                                        data-item-id="<?php echo $popular_item['item_id']; ?>"
+                                                        data-item-price="<?php echo $popular_item['deal_price']; ?>">
                                                     Add to Bag <i class="fas fa-shopping-cart"></i>
                                                 </button>
                                             </div>
@@ -172,9 +178,10 @@
                     addToBagButton.click(function() {
                         console.log("Add to Bag button clicked!");
                         const itemId = $(this).data("item-id");
+                        const itemPrice = $(this).data("item-price");
                         console.log("Item ID:", itemId);
 
-                        $.post("add-to-bag.php", { add_to_bag: true, item_id: itemId }, function(data) {
+                        $.post("add-to-bag.php", { add_to_bag: true, item_id: itemId, item_price: itemPrice }, function(data) {
                             if (data.success) {
                                 alert(data.message); // Display a success message
                             } else {
@@ -183,7 +190,7 @@
                         }, "json")
                         .fail(function(xhr, status, error) {
                             console.error("Error adding item to bag:", error);
-                            console.log("XHR object:", xhr);
+                            console.log("XHR object:", xhr.responseText);
                         });
                     });
                 }
@@ -191,10 +198,11 @@
                     addToBagPopularButtons.click(function() {
                         console.log("Add to Bag Popular button clicked!");
                         const itemId = $(this).data("item-id");
+                        const itemPrice = $(this).data("item-price");
                         console.log("Item ID:", itemId);
 
                         // Your AJAX code for the "Popular Items" section
-                        $.post("add-to-bag.php", { add_to_bag: true, item_id: itemId }, function(data) {
+                        $.post("add-to-bag.php", { add_to_bag: true, item_id: itemId, item_price: itemPrice }, function(data) {
                             if (data.success) {
                                 alert(data.message); // Display a success message
                             } else {
@@ -203,7 +211,7 @@
                         }, "json")
                         .fail(function(xhr, status, error) {
                             console.error("Error adding item to bag:", error);
-                            console.log("XHR object:", xhr);
+                            console.log("XHR object:", xhr.responseText);
                         });
                     });
                 }

@@ -134,7 +134,9 @@ nav ul li a {
 
 /* Whole container of body */
 .content {
+  border: 1px solid #000;
   margin-top: 50px;
+  min-height: 100vh;
   background-color: #f2f1f1;
 }
 
@@ -311,6 +313,10 @@ input[type="submit"]:focus,
   width: 120px !important;
 }
 
+.btn-change-password {
+  width: 150px !important;
+}
+
 /* Add to bag separate control */
 .add-to-bag {
   display: block;
@@ -320,18 +326,6 @@ input[type="submit"]:focus,
   right: 0;
   margin: 0% 10%;
 }
-
-/* Social login buttons controller */
-/* .social-login .google-btn,
-.social-login .apple-btn,
-.social-login .facebook-btn {
-  width: 200px;
-  height: 7rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-} */
 
 /* Social login buttons controller */
 .social-btn {
@@ -387,20 +381,6 @@ span.forget-password {
   justify-content: center;
 }
 
-/* .social-login img {
-  height: 20px;
-  width: 20px;
-  vertical-align: middle;
-  margin-right: 10px;
-}
-
-.social-login a {
-  height: 100px;
-  width: 250px;
-  vertical-align: middle;
-  margin-right: 10px;
-} */
-
 /* Signup form container */
 .signup-container {
   position: absolute;
@@ -447,6 +427,17 @@ span.forget-password {
 input[type="text"],
 input[type="password"],
 input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.profile-email,
+input[type="email"] {
+  height: 38px;
   width: 100%;
   padding: 10px;
   margin: 8px 0;
@@ -1033,4 +1024,8 @@ footer {
 
 .fa-linkedin:hover {
   color: #0e76a8;
+}
+
+.error {
+  border-color: red;
 }

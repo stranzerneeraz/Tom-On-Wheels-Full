@@ -31,6 +31,7 @@
             
             // Set the user ID in the session
             $_SESSION["user_id"] = $user["user_id"];
+            $_SESSION["name"] = $user["name"];
             // Redirect to menu.php after successful login
             header("Location:menu.php");
             exit();
