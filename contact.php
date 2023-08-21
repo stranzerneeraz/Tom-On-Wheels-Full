@@ -1,33 +1,33 @@
 <?php
-session_start();
-require_once "config.php";
+  session_start();
+  require_once "config.php";
 
-// Check if the user is logged in
-$isLoggedIn = isset($_SESSION["user_id"]);
+  // Check if the user is logged in
+  $isLoggedIn = isset($_SESSION["user_id"]);
 
-if ($isLoggedIn) {
+  if ($isLoggedIn) {
     $userId = $_SESSION["user_id"];
-}
+  }
 
-// Form submission handling
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  // Form submission handling
+  if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     $subject = $_POST["subject"];
     $description = $_POST["description"];
 
     if ($isLoggedIn) {
-        // User is logged in, insert the data along with user_id
-        $query = "INSERT INTO contact_us (email, user_id, subject, description) VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("siss", $email, $userId, $subject, $description);
-        $stmt->execute();
-        $stmt->close();
+      // User is logged in, insert the data along with user_id
+      $query = "INSERT INTO contact_us (email, user_id, subject, description) VALUES (?, ?, ?, ?)";
+      $stmt = $conn->prepare($query);
+      $stmt->bind_param("siss", $email, $userId, $subject, $description);
+      $stmt->execute();
+      $stmt->close();
     } else {
-        // User is not logged in, show an alert and redirect to login page
-        echo "<script>alert('Please login before submitting your message.'); window.location.href='login.php';</script>";
-        exit;
+      // User is not logged in, show an alert and redirect to login page
+      echo "<script>alert('Please login before submitting your message.'); window.location.href='login.php';</script>";
+      exit;
     }
-}
+  }
 ?>
 
 <!DOCTYPE html>
@@ -46,57 +46,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css"
       rel="stylesheet"
     />
-    <!-- <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    /> -->
   </head>
-  <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-bottom-dark fixed-top" data-bs-theme="dark">
-            <div class="container">
-                <a class="navbar-brand" href="index.php">
-                    <img src="images/logo.jpeg" alt="Logo" width="40" height="32" class="d-inline-block align-text-top">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="menu.php">Menu</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="orders.php">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.php">Contact Us</a>
-                        </li>
-                        <?php
-                            if (isset($_SESSION["user_id"])) {
-                              echo '<li class="nav-item">
-                                      <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
-                                    </li>';
 
-                              echo '<li class="nav-item">
-                                      <a class="nav-link" href="profile.php"> Hi, ' . $_SESSION['name'] . '</a>
-                                    </li>';
-                            } else {
-                              echo '<li class="nav-item">
-                                      <a class="nav-link" href="login.php">Login</a>
-                                    </li>';
-                            }
-                          ?>
-                    </ul>
-                    <form class="d-flex ms-auto" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-bottom-dark fixed-top" data-bs-theme="dark">
+      <div class="container">
+        <a class="navbar-brand" href="index.php">
+          <img src="images/logo.jpeg" alt="Logo" width="40" height="32" class="d-inline-block align-text-top">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.php">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="menu.php">Menu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="orders.php">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.php">Contact Us</a>
+            </li>
+            <?php
+              if (isset($_SESSION["user_id"])) {
+                echo '<li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                      </li>';
+
+                echo '<li class="nav-item">
+                        <a class="nav-link" href="profile.php"> Hi, ' . $_SESSION['name'] . '</a>
+                      </li>';
+              } else {
+                  echo '<li class="nav-item">
+                          <a class="nav-link" href="login.php">Login</a>
+                        </li>';
+              }
+            ?>
+            </ul>
+            <form class="d-flex ms-auto" role="search" id="searchForm" action="search.php" method="GET">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchQuery">
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
-                </div>
-            </div> 
-        </nav>
+          </div>
+        </div>
+      </div> 
+    </nav>
 
     <div class="content">
       <div class="container">
@@ -128,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           </div>
           <div class="col-md-6">
             <div class="contact-form">
-              <!-- Contact Us -->
+              <!-- Contact Us Form-->
               <h1 class="header">Contact Us</h1>
               <form action="" method="POST">
                 <label for="email" class="form-label">Email:</label>
@@ -172,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <!-- Footer container -->
     <?php include 'footer.php'; ?>
 
-    <script src="js/script.js"></script>
+    
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
       integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -184,9 +182,51 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       crossorigin="anonymous"
     ></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <script src="js/script.js"></script>
     <!-- Load map function called -->
     <script>
       loadMap();
+
+      $(document).ready(function () {
+        $("#searchForm").submit(function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        var searchQuery = $("input[name='searchQuery']").val();
+
+        console.log(searchQuery);
+
+        // Redirect to menu.php with the search query as a parameter
+        window.location.href = "menu.php?searchQuery=" + encodeURIComponent(searchQuery);
+    });
+
+
+    function fetchSearchResults(searchQuery) {
+        $.ajax({
+            url: "search.php",
+            method: "GET",
+            data: { searchQuery: searchQuery },
+            success: function (response) {
+                $("#filteredResults").html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error(error); // For debugging
+            }
+        });
+    }
+
+    // Function to update a URL parameter
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        return uri + separator + key + "=" + value;
+    }
+
+    // ...
+});
+
     </script>
   </body>
 </html>

@@ -1,15 +1,31 @@
 <?php
-session_start(); // Start the session
-require_once "config.php"; // Include your config file
+  session_start(); // Start the session
+  require_once "config.php"; // Include your config file
 
-// Check if the user is logged in
-$isLoggedIn = isset($_SESSION["user_id"]);
+  // Check if the user is logged in
+  $isLoggedIn = isset($_SESSION["user_id"]);
 
-if ($isLoggedIn) {
+  if ($isLoggedIn) {
     // User is logged in, you can perform any necessary actions here
     $userId = $_SESSION["user_id"];
-    // ... (perform additional logic if needed)
-}
+  }
+
+  $carouselQuery = "SELECT * FROM carousel_slide";
+  $carouselResult = mysqli_query($conn, $carouselQuery);
+
+  $carouselSpecialities = [];
+  while ($carouselRow = mysqli_fetch_assoc($carouselResult)) {
+    $carouselSpecialities[] = $carouselRow;
+  }
+
+  $query = "SELECT * FROM speciality_sections";
+  $result = mysqli_query($conn, $query);
+
+  // Create an array to hold the retrieved data
+  $specialities = [];
+  while ($row = mysqli_fetch_assoc($result)) {
+    $specialities[] = $row;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -29,97 +45,80 @@ if ($isLoggedIn) {
   <body>
     <!-- Navbar container -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-bottom-dark fixed-top" data-bs-theme="dark">
-            <div class="container">
-                <a class="navbar-brand" href="index.php">
-                    <img src="images/logo.jpeg" alt="Logo" width="40" height="32" class="d-inline-block align-text-top">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="menu.php">Menu</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="orders.php">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.php">Contact Us</a>
-                        </li>
-                        <?php
-                            if (isset($_SESSION["user_id"])) {
-                              echo '<li class="nav-item">
-                                      <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
-                                    </li>';
+      <div class="container">
+        <a class="navbar-brand" href="index.php">
+          <img src="images/logo.jpeg" alt="Logo" width="40" height="32" class="d-inline-block align-text-top">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.php">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="menu.php">Menu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="orders.php">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.php">Contact Us</a>
+            </li>
+            <?php
+              if (isset($_SESSION["user_id"])) {
+                echo '<li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                      </li>';
 
-                              echo '<li class="nav-item">
-                                      <a class="nav-link" href="profile.php"> Hi, ' . $_SESSION['name'] . '</a>
-                                    </li>';
-                            } else {
-                              echo '<li class="nav-item">
-                                      <a class="nav-link" href="login.php">Login</a>
-                                    </li>';
-                            }
-                          ?>
-                    </ul>
-                    <form class="d-flex ms-auto" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                echo '<li class="nav-item">
+                        <a class="nav-link" href="profile.php"> Hi, ' . $_SESSION['name'] . '</a>
+                      </li>';
+              } else {
+                  echo '<li class="nav-item">
+                          <a class="nav-link" href="login.php">Login</a>
+                        </li>';
+              }
+            ?>
+            </ul>
+            <form class="d-flex ms-auto" role="search" id="searchForm" action="menu.php" method="GET">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchQuery">
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
-                </div>
-            </div> 
-        </nav>
+          </div>
+        </div>
+      </div> 
+    </nav>
 
     <div class="content">
       <!-- Homepage background banner content -->
       <div id="carouselExampleCaptions" class="carousel slide position-relative">
         <div class="carousel-indicators">
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+          <?php
+            $slideCount = count($carouselSpecialities);
+            for ($i = 0; $i < $slideCount; $i++) {
+                $indicatorClass = ($i === 0) ? 'active' : '';
+                echo '<button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="' . $i . '" class="' . $indicatorClass . '" aria-label="Slide ' . ($i + 1) . '"></button>';
+            }
+          ?>
         </div>
         <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="images/banner5.jpg" class="d-block w-100 banner-image" alt="Food Delivery">
-            <div class="carousel-caption d-none d-md-block">
-              <input type="text" class="form-control mb-3" placeholder="Enter your location" />
-              <button class="btn btn-primary">Check Location</button>
-              <h3 class="header">Order Delicious Food Online</h5>
-              <p class="attractive-text-center">Discover a wide range of mouth-watering dishes<br>and have them delivered to your doorstep.</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="images/banner6.jpg" class="d-block w-100" alt="Food Delivery">
-            <div class="carousel-caption d-none d-md-block">
-              <input type="text" class="form-control mb-3" placeholder="Enter your location" />
-              <button class="btn btn-primary">Check Location</button>
-              <h3 class="header">Order Delicious Food Online</h5>
-              <p class="attractive-text-center">Discover a wide range of mouth-watering dishes<br>and have them delivered to your doorstep.</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="images/banner3.jpg" class="d-block w-100" alt="Food Delivery">
-            <div class="carousel-caption d-none d-md-block">
-              <input type="text" class="form-control mb-3" placeholder="Enter your location" />
-              <button class="btn btn-primary">Check Location</button>
-              <h3 class="header">Order Delicious Food Online</h5>
-              <p class="attractive-text-center">Discover a wide range of mouth-watering dishes<br>and have them delivered to your doorstep.</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="images/banner4.jpg" class="d-block w-100" alt="Food Delivery">
-            <div class="carousel-caption d-none d-md-block">
-              <input type="text" class="form-control mb-3" placeholder="Enter your location" />
-              <button class="btn btn-primary">Check Location</button>
-              <h3 class="header">Order Delicious Food Online</h5>
-              <p class="attractive-text-center">Discover a wide range of mouth-watering dishes<br>and have them delivered to your doorstep.</p>
-            </div>
-          </div>
+          <?php
+            foreach ($carouselSpecialities as $i => $slide) {
+              $itemClass = ($i === 0) ? 'active' : '';
+              echo '<div class="carousel-item ' . $itemClass . '">
+                      <img src="' . $slide['carousel_image_url'] . '" class="d-block w-100 banner-image" alt="Food Delivery">
+                      <div class="carousel-caption d-none d-md-block">
+                        <input type="text" class="form-control mb-3" id="postcodeInput' . $i . '" placeholder="Enter your postcode" />
+                        <button class="btn btn-primary" onclick="checkDelivery(' . $i . ')">Check Location</button>
+                        <h3 class="header">' . $slide['header'] . '</h3>
+                        <p class="attractive-text-center">' . $slide['carousel_description'] . '</p>
+                        <p class="delivery-message" id="deliveryMessage' . $i . '"></p>
+                      </div>
+                    </div>';
+            }
+          ?>
         </div>
         <div class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -136,48 +135,15 @@ if ($isLoggedIn) {
         <section class="speciality-section" id="speciality">
           <h1 class="header"> Our Speciality</h1>
           <div class="box-container">
-            <div class="box" onclick="menuPage()">
-              <img class="image" src="images/tasty-burger.jpg" alt="burger">
-              <div class="item">
-                <h3 class="small-header">Tasty Burger</h3>
-                <p class="attractive-text-center">A delicious and flavorful burger made with high-quality ingredients.</p>
+            <?php foreach ($specialities as $speciality) { ?>
+              <div class="box" onclick="menuPage()">
+                <img class="image" src="<?php echo $speciality['speciality_img_url']; ?>" alt="<?php echo $speciality['name']; ?>">
+                <div class="item">
+                  <h3 class="small-header"><?php echo $speciality['name']; ?></h3>
+                  <p class="attractive-text-center"><?php echo $speciality['speciality_description']; ?></p>
+                </div>
               </div>
-            </div>
-            <div class="box" onclick="menuPage()">
-              <img class="image" src="images/tasty-pizza.jpg" alt="pizza">
-              <div class="item">
-                <h3 class="small-header">Tasty Pizza</h3>
-                <p class="attractive-text-center">Authentic Italian pizza topped with fresh ingredients and a perfectly crispy crust.</p>
-              </div>
-            </div>
-            <div class="box" onclick="menuPage()">
-            <img class="image" src="images/tasty-momo.jpg" alt="momo">
-              <div class="item">
-                <h3 class="small-header">Tasty Momo</h3>
-                <p class="attractive-text-center">Delicious momos filled with a savory and flavorful stuffing, served with a tasty dipping sauce.</p>
-              </div>
-            </div>
-            <div class="box" onclick="menuPage()">
-              <img class="image" src="images/tasty-curry-naan.jpg" alt="curry naan">
-              <div class="item">
-                <h3 class="small-header">Tasty Curry Naan</h3>
-                <p class="attractive-text-center">Soft and fluffy naan bread paired with a delectable curry, bursting with aromatic flavors.</p>
-              </div>
-            </div>
-            <div class="box" onclick="menuPage()">
-              <img class="image" src="images/tasty-noodles.jpg" alt="noodles">
-              <div class="item">
-                <h3 class="small-header">Tasty Noodles</h3>
-                <p class="attractive-text-center">Mouthwatering noodles cooked to perfection and tossed with a flavorful sauce and fresh vegetables.</p>
-              </div>
-            </div>
-            <div class="box" onclick="menuPage()">
-              <img class="image" src="images/cold-drinks.jpg" alt="cold drinks">
-              <div class="item">
-                <h3 class="small-header">Chilled Cold Drinks</h3>
-                <p class="attractive-text-center">Refreshing and chilled beverages to quench your thirst and complement your meal.</p>
-              </div>
-            </div>
+            <?php } ?>
           </div>
         </section>
 
@@ -217,5 +183,98 @@ if ($isLoggedIn) {
     <script src="js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+    <script>
+      $(document).ready(function () {
+    // ...
+
+    $("#searchForm").submit(function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        var searchQuery = $("input[name='searchQuery']").val();
+
+        $.ajax({
+            url: "search.php",
+            method: "GET",
+            data: { searchQuery: searchQuery },
+            success: function (response) {
+                $("#filteredResults").html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error(error); // For debugging
+            }
+        });
+    });
+
+    // ...
+});
+      function checkDelivery(slideIndex) {
+        var postcodeInput = document.getElementById('postcodeInput' + slideIndex).value;
+        console.log(postcodeInput);
+        var origin = "-2.009392,52.534513"; // Food Delivery App Office coordinates (no spaces)
+
+        // Call the function to get coordinates from postcode
+        getCoordinatesFromPostcode(postcodeInput).then(destinationCoordinates => {
+          if (destinationCoordinates) {
+            var destination = destinationCoordinates.join(','); // Convert [longitude, latitude] to a single string
+            // Call the function to calculate the distance
+            calculateDistance(origin, destination).then(distance => {
+              var deliveryMessage = "";
+              if (distance >= 0) {
+                if (distance <= 5) {
+                  deliveryMessage = "Food is delivered in your area within 15-30 minutes. Choose your food from the menu.";
+                } else if (distance <= 10) {
+                  deliveryMessage = "Food is delivered in your area within 30-45 minutes. Choose your food from the menu.";
+                } else {
+                  deliveryMessage = "Sorry! We are unable to deliver in your area. We are expanding our area soon.";
+                }
+              } else {
+                deliveryMessage = "Error calculating distance. Please try again later.";
+              }
+              alert(deliveryMessage); // Show the alert with the delivery message
+            });
+          } else {
+            alert("Invalid postcode. Please enter a valid postcode.");
+          }
+        });
+      }
+
+      function getCoordinatesFromPostcode(postcode) {
+        var mapboxGeocodingToken = 'pk.eyJ1Ijoic3RyYW56ZXJuZWVyYXoiLCJhIjoiY2xqcjJhdjhsMDNrYjNjdnN4a3IyM3l1biJ9.DVRVAz534tJ0fGyhteiEEQ';
+        var url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${postcode}.json?access_token=${mapboxGeocodingToken}`;
+    
+        return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.features && data.features.length > 0) {
+            return data.features[0].center; // Return the coordinates [longitude, latitude]
+          }
+          return null; // Indicates error or no data
+        });
+      }
+
+      function calculateDistance(origin, destination) {
+        var mapboxToken = 'pk.eyJ1Ijoic3RyYW56ZXJuZWVyYXoiLCJhIjoiY2xqcjJhdjhsMDNrYjNjdnN4a3IyM3l1biJ9.DVRVAz534tJ0fGyhteiEEQ';
+        var url = `https://api.mapbox.com/directions-matrix/v1/mapbox/driving/${origin};${destination}?access_token=${mapboxToken}`;
+        
+        return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            
+          if (data.durations && data.durations.length > 0) {
+            var durationInSeconds = data.durations[0][1];
+            var averageSpeedMph = 21.5; // Average speed in miles per hour (adjust as needed)
+                
+            // Calculate estimated distance based on duration and average speed
+            var distanceInMiles = durationInSeconds / 3600 * averageSpeedMph;
+                
+            return distanceInMiles;
+          }
+          return -1; // Indicates error or no data
+        })
+        .then(distance => {
+          return distance; // Return the estimated distance
+        });
+      }
+    </script>
   </body>
 </html>

@@ -1,22 +1,22 @@
 <?php
-  session_start();
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
-  require_once "config.php";
+    session_start();
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    require_once "config.php";
 
-  // Check if user is logged in
-  if (!isset($_SESSION["user_id"])) {
-      header("Location: login.php");
-      exit();
-  }
+    // Check if user is logged in
+    if (!isset($_SESSION["user_id"])) {
+        header("Location: login.php");
+        exit();
+    }
 
-  // Add item to bag
-  if (isset($_POST["add_to_bag"])) {
-    $item_id = $_POST["item_id"];
-    $user_id = $_SESSION["user_id"];
-    
-    $item_query = "SELECT * FROM menu_items WHERE item_id = $item_id";
-    $item_result = $conn->query($item_query);
+    // Add item to bag
+    if (isset($_POST["add_to_bag"])) {
+        $item_id = $_POST["item_id"];
+        $user_id = $_SESSION["user_id"];
+        
+        $item_query = "SELECT * FROM menu_items WHERE item_id = $item_id";
+        $item_result = $conn->query($item_query);
     
     if ($item_result->num_rows > 0) {
         $item_data = $item_result->fetch_assoc();
@@ -105,8 +105,8 @@
                             }
                           ?>
                     </ul>
-                    <form class="d-flex ms-auto" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <form class="d-flex ms-auto" role="search" id="searchForm">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchQuery">
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
                 </div>
@@ -114,171 +114,234 @@
         </nav>
 
     <div class="content ">
-      <div class="container pt-5 pb-5">
-        <div class="card">
-          <h1 class="header">Explore Menu</h1>
-          <div class="card-body p-5">
-            <div class="row">
-              <div class="col-lg-2 col-md-3 col-sm-12 col-12">
-                <div class="menu-options">
-                  <div class="menu-controls">
-                    <div class="filters">
-                      <h4>Filters:</h4>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="vegetarianCheckbox">
-                        <label class="form-check-label" for="vegetarianCheckbox">Vegetarian</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="nonVegetarianCheckbox">
-                        <label class="form-check-label" for="nonVegetarianCheckbox">Non-Vegetarian</label>
-                      </div>
+        <div class="container pt-5 pb-5">
+            <div class="card">
+                <h1 class="header">Explore Menu</h1>
+                <div class="card-body p-5">
+                    <div class="row">
+                        <!-- Filter section -->
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-12">
+                            <div class="menu-options">
+                                <div class="menu-controls">
+                                    <div class="filters">
+                                        <h4>Filters:</h4>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="vegetarianCheckbox">
+                                            <label class="form-check-label" for="vegetarianCheckbox">Vegetarian</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="nonVegetarianCheckbox">
+                                            <label class="form-check-label" for="nonVegetarianCheckbox">Non-Vegetarian</label>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div class="price-range">
+                                    <h4 class="form-label">Price Range:</h4>
+                                    
+                                    <div id="priceSlider"></div>
+                                    
+                                    <div class="d-flex align-items-center">
+                                        <label for="minPrice" class="form-label me-2">Min Price:</label>
+                                        <input type="number" class="form-control" id="minPrice" value="0">
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center">
+                                        <label for="maxPrice" class="form-label me-2">Max Price:</label>
+                                        <input type="number" class="form-control" id="maxPrice" value="10">
+                                    </div>
+                                    
+                                    <button class="btn btn-primary" id="applyPriceRange">Apply</button>
+                                </div>
+                        
+                            </div>
+                        </div>
+                        <!-- Results section -->
+                        <div class="col-lg-10 col-12">
+                            <div class="row justify-content-start" id="filteredResults">
+                                <?php
+                                    // Check if there's a search query
+                                    if (isset($_GET['searchQuery'])) {
+                                        // Include the search logic from search.php
+                                        require_once "search.php";
+                                    } else {
+                                        $sql = "SELECT * FROM menu_items";
+                                        $result = $conn->query($sql);
+
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo '<div class="col-md-4 col-12">';
+                                                echo '<div class="card m-3 border">';
+                                                echo '<a href="menu-detail.php?item_id=' . $row["item_id"] . '">';
+                                                echo '<img src="' . $row["image_url"] . '" class="card-img-top" alt="...">';
+                                                echo '</a>';
+                                                echo '<div class="card-body">';
+                                                echo '<h5 class="card-title header">' . $row["name"] . '</h5>';
+                                                echo '<h6 class="card-title header">£' . $row["price"] . '</h6>';
+                                                
+                                                // Add to Bag button with AJAX functionality
+                                                echo '<button class="btn btn-primary add-to-bag" data-item-id="' . $row["item_id"] . '">Add to Bag <i class="fas fa-shopping-cart"></i></button>';
+                                                
+                                                echo '</div>';
+                                                echo '</div>';
+                                                echo '</div>';
+                                            }
+                                        } else {
+                                            echo "0 results";
+                                        }
+                                    }
+                                ?>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-    
-                  <div class="price-range">
-    <h4 class="form-label">Price Range:</h4>
-    
-    <div id="priceSlider"></div>
-    
-    <div class="d-flex align-items-center">
-        <label for="minPrice" class="form-label me-2">Min Price:</label>
-        <input type="number" class="form-control" id="minPrice" value="0">
-    </div>
-    
-    <div class="d-flex align-items-center">
-        <label for="maxPrice" class="form-label me-2">Max Price:</label>
-        <input type="number" class="form-control" id="maxPrice" value="100">
-    </div>
-    
-    <button class="btn btn-primary" id="applyPriceRange">Apply</button>
-</div>
-              
                 </div>
+                <!-- Pagination section -->
+                <ul class="pagination">
+                    <li class="disabled"><a href="#">Previous</a></li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">Next</a></li>
+                </ul>
             </div>
-            <div class="col-lg-10 col-12">
-              <div class="row">
-                  <?php
-                  $sql = "SELECT * FROM menu_items";
-                  $result = $conn->query($sql);
-
-                  if ($result->num_rows > 0) {
-                      while ($row = $result->fetch_assoc()) {
-                          echo '<div class="col-md-4 col-12">';
-                          echo '<div class="card m-3 border">';
-                          echo '<a href="menu-detail.php?item_id=' . $row["item_id"] . '">';
-                          echo '<img src="' . $row["image_url"] . '" class="card-img-top" alt="...">';
-                          echo '</a>';
-                          echo '<div class="card-body">';
-                          echo '<h5 class="card-title header">' . $row["name"] . '</h5>';
-                          echo '<h6 class="card-title header">£' . $row["price"] . '</h6>';
-                          
-                          // Add to Bag button with AJAX functionality
-                          echo '<button class="btn btn-primary add-to-bag" data-item-id="' . $row["item_id"] . '">Add to Bag <i class="fas fa-shopping-cart"></i></button>';
-                          
-                          echo '</div>';
-                          echo '</div>';
-                          echo '</div>';
-                      }
-                  } else {
-                      echo "0 results";
-                  }
-                  ?>
-              </div>
-            </div>
-          </div>
         </div>
-        <ul class="pagination">
-          <li class="disabled"><a href="#">Previous</a></li>
-          <li class="active"><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">Next</a></li>
-        </ul>
-      </div>
-    </div>
-      
-    <?php include 'footer.php'; ?>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
-
-<script src="js/script.js"></script>
-<script>
-        var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? "true" : "false"; ?>;
-        updateNavbar(isLoggedIn);
-
-        $(document).ready(function () {
-          var priceSlider = document.getElementById('priceSlider');
-    var minPriceInput = document.getElementById('minPrice');
-    var maxPriceInput = document.getElementById('maxPrice');
     
-    noUiSlider.create(priceSlider, {
-        start: [0, 100], // Initial values
-        connect: true, // Connect the two thumbs
-        range: {
-            'min': 0,
-            'max': 100
-        }
-    });
-    
-    // Link slider values to input fields
-    priceSlider.noUiSlider.on('update', function(values, handle) {
-        if (handle === 0) {
-            minPriceInput.value = Math.round(values[handle]);
-        } else {
-            maxPriceInput.value = Math.round(values[handle]);
-        }
-    });
+        <!-- Footer section -->
+        <?php include 'footer.php'; ?>
 
-    // Apply button click event
-    $('#applyPriceRange').click(function() {
-        updateFilteredItems();
-    });
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
 
-    function updateFilteredItems() {
-    var vegetarianChecked = $('#vegetarianCheckbox').prop('checked');
-    var nonVegetarianChecked = $('#nonVegetarianCheckbox').prop('checked');
-    var minPrice = minPriceInput.value;
-    var maxPrice = maxPriceInput.value;
+        <script src="js/script.js"></script>
+        <script>
+            var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? "true" : "false"; ?>;
+            updateNavbar(isLoggedIn);
 
-    $.ajax({
-        url: 'filter.php', // Replace with the actual PHP file
-        method: 'GET',
-        data: {
-            vegetarian: vegetarianChecked,
-            nonVegetarian: nonVegetarianChecked,
-            priceRange: [minPrice, maxPrice] // Pass price range as an array
-        },
-        success: function(response) {
-            $('.row').html(response); // Update the content of the row with filtered items
-        }
-    });
-}
+            $(document).ready(function () {
+    $("#searchForm").submit(function (event) {
+        event.preventDefault(); // Prevent form submission
 
-    $(".add-to-bag").on("click", function () {
-        var itemId = $(this).data("item-id");
+        var searchQuery = $("input[name='searchQuery']").val();
+
+        // Update browser history
+        var newUrl = updateQueryStringParameter(window.location.href, 'searchQuery', searchQuery);
+        console.log(newUrl);
+        history.pushState({}, '', newUrl);
+
+            // Fetch and display search results on the same page
+            fetchSearchResults(searchQuery);
         
+    });
+
+    // ...
+
+    function fetchSearchResults(searchQuery) {
         $.ajax({
-            url: "menu.php",
-            method: "POST",
-            data: { add_to_bag: true, item_id: itemId }, // Include add_to_bag flag
-            dataType: "json",
+            url: "search.php",
+            method: "GET",
+            data: { searchQuery: searchQuery },
             success: function (response) {
-                console.log(response); // For debugging
-                if (response.success) {
-                    // Item added successfully, update UI if needed
-                } else {
-                    // Error adding item, handle accordingly
-                }
+                $("#filteredResults").html(response);
             },
             error: function (xhr, status, error) {
                 console.error(error); // For debugging
             }
         });
-    });
+    }
+
+    // Function to update a URL parameter
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        return uri + separator + key + "=" + value;
+    }
+
+    // ...
 });
-    </script>
-  </body>
+
+
+                var priceSlider = document.getElementById('priceSlider');
+                var minPriceInput = document.getElementById('minPrice');
+                var maxPriceInput = document.getElementById('maxPrice');
+        
+                noUiSlider.create(priceSlider, {
+                    start: [0, 10], // Initial values
+                    connect: true, // Connect the two thumbs
+                    range: {
+                        'min': 0,
+                        'max': 10
+                    }
+                });
+        
+                // Link slider values to input fields
+                priceSlider.noUiSlider.on('update', function(values, handle) {
+                    if (handle === 0) {
+                        minPriceInput.value = Math.round(values[handle]);
+                    } else {
+                        maxPriceInput.value = Math.round(values[handle]);
+                    }
+                });
+
+                // Apply button click event
+        $('#applyPriceRange').click(function() {
+            updateFilteredItems();
+        });
+
+        function updateFilteredItems() {
+            var vegetarianChecked = $('#vegetarianCheckbox').prop('checked');
+            var nonVegetarianChecked = $('#nonVegetarianCheckbox').prop('checked');
+            var minPrice = $('#minPrice').val();
+            var maxPrice = $('#maxPrice').val();
+
+            console.log("vegetarian:", vegetarianChecked,
+                    "nonVegetarian:", nonVegetarianChecked,
+                    "minPrice:", minPrice,
+                    "maxPrice:", maxPrice)
+
+                    $.ajax({
+        url: 'filter.php',
+        method: 'GET',
+        data: {
+            vegetarian: vegetarianChecked,
+            nonVegetarian: nonVegetarianChecked,
+            minPrice: minPrice,
+            maxPrice: maxPrice
+        },
+                success: function(response) {
+                    $('#filteredResults').html(response);
+                }
+            }).then(function(response) {
+                console.log(response);
+            })
+        }
+
+
+                $(".add-to-bag").on("click", function () {
+                    var itemId = $(this).data("item-id");
+                
+                    $.ajax({
+                        url: "menu.php",
+                        method: "POST",
+                        data: { add_to_bag: true, item_id: itemId }, // Include add_to_bag flag
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.success) {
+                                // Item added successfully, update UI if needed
+                            } else {
+                                // Error adding item, handle accordingly
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error); // For debugging
+                        }
+                    });
+                });
+            
+        </script>
+    </body>
 </html>
  

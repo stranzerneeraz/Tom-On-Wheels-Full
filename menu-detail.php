@@ -77,8 +77,8 @@
                             }
                         ?>
                     </ul>
-                    <form class="d-flex ms-auto" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <form class="d-flex ms-auto" role="search" id="searchForm" action="menu.php" method="GET">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchQuery">
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
                 </div>
@@ -169,7 +169,24 @@
         <script src="js/script.js"></script>
         <script>
             $(document).ready(function() {
-                console.log("Document ready!");
+            $("#searchForm").submit(function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        var searchQuery = $("input[name='searchQuery']").val();
+
+        $.ajax({
+            url: "search.php",
+            method: "GET",
+            data: { searchQuery: searchQuery },
+            success: function (response) {
+                $("#filteredResults").html(response);
+            },
+            error: function (xhr, status, error) {
+                console.error(error); // For debugging
+            }
+        });
+    });
+               
 
                 const addToBagButton = $("#add-to-bag-button");
                 const addToBagPopularButtons = $(".add-to-bag-popular");

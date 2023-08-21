@@ -48,6 +48,10 @@ function confirmLogout() {
   }
 }
 
+
+
+
+
 // Display map of the location of the application with the help of Map Box map
 function loadMap() {
   mapboxgl.accessToken =
